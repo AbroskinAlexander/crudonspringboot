@@ -1,6 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>User-Info</title>
+    <link rel="stylesheet" href="../static/bootstrap.css">
 </head>
 <body>
 
@@ -15,7 +16,7 @@
         </tr>
         <tr>
             <td align="right" width="100">Имя:</td>
-            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
         </tr>
         <tr>
             <td align="right" width="100">Пароль:</td>

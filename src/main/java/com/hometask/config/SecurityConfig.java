@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(filter, CsrfFilter.class);
         http.formLogin()
                 // указываем страницу с формой логина
-                .loginPage("/login")
+                .loginPage("/login**")
                 //указываем логику обработки при логине
                 //     .successHandler(new LoginSuccessHandler())
                 // указываем action с формы логина
@@ -63,8 +63,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
+                .antMatchers("/static/**","/").permitAll()
                 .antMatchers("/admin**").hasAuthority("ADMIN")
                 .antMatchers("/user").hasAnyAuthority("USER");
+
 
     }
 

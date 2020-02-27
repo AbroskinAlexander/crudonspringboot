@@ -5,11 +5,7 @@ import com.hometask.model.User;
 import com.hometask.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
@@ -29,15 +25,15 @@ public class UserController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public ModelAndView home(Authentication authentication, ModelAndView model) {
-        model.addObject("user", serv.getUserByName(authentication.getName()));
-        model.setViewName("user-info");
+        model.addObject("user", serv.getUserByEmail(authentication.getName()));
+        model.setViewName("exuser-info");
         return model;
     }
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public ModelAndView allUsers(ModelAndView modelAndView) {
         List<User> allUser = serv.getAllUsers();
-        modelAndView.setViewName("user-main");
+        modelAndView.setViewName("admin-page");
         modelAndView.addObject("users", allUser);
         return modelAndView;
     }
@@ -59,9 +55,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/edit", method = RequestMethod.POST)
-    public String editPage(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("user",serv.getUserById(id));
-        return "user-edit";
+    public ModelAndView editPage(@RequestParam("id") Long id, ModelAndView model) {
+        model.addObject("user", serv.getUserById(id));
+        model.setViewName("exuser-edit");
+        return model;
     }
 
     @RequestMapping(value = "/admin/update", method = RequestMethod.POST)
@@ -86,7 +83,7 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    @RequestMapping("/login")
+    @RequestMapping("/login**")
     public ModelAndView getLogin(Authentication authentication, HttpServletRequest request, ModelAndView model, HttpServletResponse httpServletResponse) throws IOException, ServletException {
         if (authentication != null) {
             if (authentication.getAuthorities().contains(Role.ADMIN)) {
@@ -97,10 +94,18 @@ public class UserController {
         }
         if (request.getParameterMap().containsKey("error")) {
             model.setViewName("user-login");
-            model.addObject("status", "Не верная почта или пароль");
+            model.addObject("status", "Не верный Email или Password");
             return model;
         }
         model.setViewName("user-login");
+        return model;
+    }
+
+    @RequestMapping(value = "/ad", method = RequestMethod.GET)
+    public ModelAndView ad(Authentication authentication, ModelAndView model) {
+        List<User> allUser = serv.getAllUsers();
+        model.setViewName("admin-page");
+        model.addObject("users", allUser);
         return model;
     }
 }

@@ -45,16 +45,18 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean ExistUser(User user) {
 
-        TypedQuery<User> query = entityManager.createQuery("select u From User u where u.username=:username",User.class);
-        query.setParameter("username", user.getUsername());
+        TypedQuery<User> query = entityManager.createQuery("select u From User u where u.email=:email",User.class);
+        query.setParameter("email", user.getUsername());
         List<User> list = query.getResultList();
         return list.size() == 0;
     }
 
+
+
     @Override
-    public User getUserByName(String name) {
-        TypedQuery<User> query = entityManager.createQuery("select u From User u where u.username=:username",User.class);
-        query.setParameter("username", name);
+    public User getUserByEmail(String email) {
+        TypedQuery<User> query = entityManager.createQuery("select u From User u where u.email=:email",User.class);
+        query.setParameter("email", email);
         return query.getSingleResult();
     }
 }
