@@ -37,8 +37,8 @@
             <div class="col-md-2" style="background-color: #f5f5f5">
 
 
-                <a href="#" class="list-group-item list-group-item-action active rounded-0 border border-info">Admin</a>
-                <a href="#"
+                <a href="/admin" class="list-group-item list-group-item-action active rounded-0 border border-info">Admin</a>
+                <a href="/user"
                    class="list-group-item list-group-item-action justify-content-between rounded-0 border border-0 "
                    style="background-color: #f5f5f5"><font color="#95bdda">User</font></a>
             </div>
@@ -81,13 +81,14 @@
                                 <tr th:each="user : ${users}">
                                     <th width="10"></th>
                                     <td th:text="${user.id}"></td>
-                                    <td><a th:each="role : ${user.getRoles()}"
-                                           th:text="${role.getAuthority()}"></a></br></td>
+                                    <td><a th:each="role : ${user.getRoles()}">
+                                        <a th:text="${role.getAuthority()}"></a></br></a></td>
                                     <td th:text="${user.login}"></td>
                                     <td th:text="${user.password}"></td>
                                     <td th:text="${user.email}"></td>
                                     <td>
-                                        <button class="btn btn-info" data-toggle="modal" data-target="#modal"
+                                        <button class="btn btn-info" data-toggle="modal"
+                                                th:data-target="'#modal'+${user.id}"
                                                 style="background-color: #41b7d9">
                                             Edit
                                         </button>
@@ -97,78 +98,93 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div id="modal" class="modal fade" tabindex="-1" role="dialog"
-                             aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <table>
-                                            <table class="table table-borderless table-sm bg-white">
-                                                <tbody>
-                                                <form id="edituser" class="form-signin" method="post"
-                                                      action="/admin/add">
-                                                    <tr>
-                                                        <td align="center"><b>ID</b></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center"><input class="form-control w-50" type="text"
-                                                                                  name="username" value="1" required
-                                                                                  autofocus readonly></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center"><b>Email</b></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center"><input class="form-control w-50" type="email"
-                                                                                  name="username" required
-                                                                                  autofocus></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="100%" align="center"><b>Login</b></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="100%" align="center"><input class="form-control w-50"
-                                                                                               type="text" name="login"
-                                                                                               required
-                                                                                               autofocus></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="100%" align="center"><b>Password</b></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="100%" align="center"><input class="form-control w-50"
-                                                                                               type="password"
-                                                                                               name="password" required
-                                                                                               autofocus></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="100%" align="center"><b>Role</b></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="100%" align="center"><input class="form-control w-50"
-                                                                                               type="text" name="role"
-                                                                                               required
-                                                                                               autofocus></td>
-                                                    </tr>
-                                                    <tr height="30"></tr>
-                                                </form>
-                                                </tbody>
+                        <div th:each="user : ${users}">
+                            <div th:id="'modal'+${user.id}" class="modal fade" tabindex="-1" role="dialog"
+                                 aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Edit <a th:each="role : ${user.getRoles()}">
+                                                <a th:text="${role.getAuthority()}"></a></a> <a
+                                                    th:text="${user.login}"></a> <a th:text="${user.password}"></a>
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table>
+                                                <table class="table table-borderless table-sm bg-white">
+                                                    <tbody>
+                                                    <form th:id="${user.id}" class="form-signin" method="post"
+                                                          action="/admin/update">
+                                                        <tr>
+                                                            <td align="center"><b>ID</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center"><input class="form-control w-50"
+                                                                                      type="text"
+                                                                                      name="id" th:value="${user.id}"
+                                                                                      required
+                                                                                      autofocus readonly></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center"><b>Email</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center"><input class="form-control w-50"
+                                                                                      type="email"
+                                                                                      name="email" required
+                                                                                      th:value="${user.email}"
+                                                                                      autofocus></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="100%" align="center"><b>Login</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="100%" align="center"><input
+                                                                    class="form-control w-50"
+                                                                    type="text" name="login" th:value="${user.login}"
+                                                                    required
+                                                                    autofocus></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="100%" align="center"><b>Password</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="100%" align="center"><input
+                                                                    class="form-control w-50"
+                                                                    type="text" th:value="${user.password}"
+                                                                    name="password" required
+                                                                    autofocus></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="100%" align="center"><b>Role</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="100%" align="center"><input
+                                                                    class="form-control w-50"
+                                                                    type="text" name="role"
+                                                                    th:each="roles : ${user.getRoles()}"
+                                                                    th:value="${roles.getAuthority()}"
+                                                                    required
+                                                                    autofocus></td>
+                                                        </tr>
+                                                        <tr height="30"></tr>
+                                                    </form>
+                                                    </tbody>
+                                                </table>
                                             </table>
-                                        </table>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-ifno" data-dismiss="modal"
-                                                style="background-color: #f5f5f5">Закрыть
-                                        </button>
-                                        <button type="button" class="btn btn-info" style="background-color: #256296">
-                                            Edit user
-                                        </button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-ifno" data-dismiss="modal"
+                                                    style="background-color: #f5f5f5">Закрыть
+                                            </button>
+                                            <button type="submit" class="btn btn-info" th:form="${user.id}"
+                                                    style="background-color: #256296">
+                                                Edit user
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -189,7 +205,7 @@
                                     </tr>
                                     <tr>
                                         <td width="10"></td>
-                                        <td align="center"><input class="form-control w-25" type="email" name="username"
+                                        <td align="center"><input class="form-control w-25" type="email" name="email"
                                                                   placeholder="Email address" required
                                                                   autofocus></td>
                                     </tr>

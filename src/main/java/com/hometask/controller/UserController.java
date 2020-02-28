@@ -26,7 +26,7 @@ public class UserController {
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public ModelAndView home(Authentication authentication, ModelAndView model) {
         model.addObject("user", serv.getUserByEmail(authentication.getName()));
-        model.setViewName("exuser-info");
+        model.setViewName("user-page");
         return model;
     }
 
@@ -39,38 +39,27 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/add", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute("user") User user, HttpServletRequest request) {
+    public String addUser(@ModelAttribute("user") User user, @RequestParam("role") String role) {
         Set<Role> roles = user.getRoles();
-        String RoleUser = request.getParameter("role1");
-        String RoleAdmin = request.getParameter("role2");
-        if (RoleUser != null) {
-            roles.add(Role.USER);
+        if (role.contains("user")) {
+            roles.add(Role.user);
         }
-        if (RoleAdmin != null) {
-            roles.add(Role.ADMIN);
+        if (role.contains("admin")) {
+            roles.add(Role.admin);
         }
         user.setRoles(roles);
         serv.addUser(user);
         return "redirect:/admin";
     }
 
-    @RequestMapping(value = "/admin/edit", method = RequestMethod.POST)
-    public ModelAndView editPage(@RequestParam("id") Long id, ModelAndView model) {
-        model.addObject("user", serv.getUserById(id));
-        model.setViewName("exuser-edit");
-        return model;
-    }
-
     @RequestMapping(value = "/admin/update", method = RequestMethod.POST)
-    public String updateUser(@ModelAttribute("user") User user, HttpServletRequest request) {
+    public String updateUser(@ModelAttribute("user") User user,@RequestParam("role") String role) {
         Set<Role> roles = user.getRoles();
-        String RoleUser = request.getParameter("role1");
-        String RoleAdmin = request.getParameter("role2");
-        if (RoleUser != null) {
-            roles.add(Role.USER);
+        if (role.contains("user")) {
+            roles.add(Role.user);
         }
-        if (RoleAdmin != null) {
-            roles.add(Role.ADMIN);
+        if (role.contains("admin")) {
+            roles.add(Role.admin);
         }
         user.setRoles(roles);
         serv.updateUser(user);
@@ -83,10 +72,10 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    @RequestMapping("/login**")
+    @RequestMapping("/login")
     public ModelAndView getLogin(Authentication authentication, HttpServletRequest request, ModelAndView model, HttpServletResponse httpServletResponse) throws IOException, ServletException {
         if (authentication != null) {
-            if (authentication.getAuthorities().contains(Role.ADMIN)) {
+            if (authentication.getAuthorities().contains(Role.admin)) {
                 httpServletResponse.sendRedirect("/admin");
             } else {
                 httpServletResponse.sendRedirect("/user");
@@ -101,11 +90,4 @@ public class UserController {
         return model;
     }
 
-    @RequestMapping(value = "/ad", method = RequestMethod.GET)
-    public ModelAndView ad(Authentication authentication, ModelAndView model) {
-        List<User> allUser = serv.getAllUsers();
-        model.setViewName("admin-page");
-        model.addObject("users", allUser);
-        return model;
-    }
 }
