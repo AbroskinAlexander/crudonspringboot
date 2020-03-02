@@ -9,11 +9,11 @@ import java.util.List;
 
 @Service
 @Transactional
-public class UserSeviceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO;
 
-    public UserSeviceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
@@ -24,7 +24,7 @@ public class UserSeviceImpl implements UserService {
 
     @Override
     public boolean addUser(User user) {
-        if (userDAO.ExistUser(user)) {
+        if (userDAO.existUser(user)) {
             userDAO.addUser(user);
             return true;
         }

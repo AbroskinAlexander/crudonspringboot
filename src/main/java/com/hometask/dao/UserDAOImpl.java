@@ -2,25 +2,21 @@ package com.hometask.dao;
 
 import com.hometask.model.User;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-@Transactional
 public class UserDAOImpl implements UserDAO {
 
+    @PersistenceContext
     private EntityManager entityManager;
-
-    public UserDAOImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     public List<User> getAllUsers() {
-        return entityManager.createQuery("select u from User u",User.class).getResultList();
+        return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
 
     @Override
@@ -43,19 +39,16 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean ExistUser(User user) {
-
-        TypedQuery<User> query = entityManager.createQuery("select u From User u where u.email=:email",User.class);
+    public boolean existUser(User user) {
+        TypedQuery<User> query = entityManager.createQuery("select u From User u where u.email=:email", User.class);
         query.setParameter("email", user.getUsername());
         List<User> list = query.getResultList();
         return list.size() == 0;
     }
 
-
-
     @Override
     public User getUserByEmail(String email) {
-        TypedQuery<User> query = entityManager.createQuery("select u From User u where u.email=:email",User.class);
+        TypedQuery<User> query = entityManager.createQuery("select u From User u where u.email=:email", User.class);
         query.setParameter("email", email);
         return query.getSingleResult();
     }

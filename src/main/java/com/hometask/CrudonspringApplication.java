@@ -10,4 +10,5 @@ public class CrudonspringApplication {
         SpringApplication.run(CrudonspringApplication.class, args);
     }
 
+
 }
